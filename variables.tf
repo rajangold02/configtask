@@ -19,5 +19,5 @@ variable "bucket_prefix" {
 }
 
 variable "sns_topic_arn" {
-  default = "arn:aws:sns:us-west-2:961508331227:sns_config"
+  default = "arn:aws:sns:us-east-1:855172423373:sns_config"
 }

@@ -28,7 +28,7 @@ POLICY
 
 resource "aws_iam_role_policy_attachment" "config" {
   role       = "${aws_iam_role.config.name}"
-  policy_arn = "arn:aws:iam::961508331227:policy/config_custom"
+  policy_arn = "arn:aws:iam::855172423373:policy/aws_config"
 }
 
 # Configuration Record To Write In Bucket
@@ -109,8 +109,9 @@ resource "aws_config_configuration_recorder" "config" {
   role_arn = "${aws_iam_role.config.arn}"
 
   recording_group {
-    all_supported                 = true
-    include_global_resource_types = true
+    all_supported                 = false
+    include_global_resource_types = false
+	resource_types = ["{AWS::S3::Bucket}", "{AWS::EC2::Instance}"]
   }
 }
 
