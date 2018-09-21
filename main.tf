@@ -186,3 +186,11 @@ resource "aws_config_config_rule" "s3_bucket_public_read_prohibited" {
 resource "aws_sns_topic" "sns" {
   name = "aws_config"
 }
+
+resource "aws_sns_topic" "email" {
+  name = "email-notifications"
+
+  provisioner "local-exec" {
+    command = "aws sns subscribe --topic-arn ${aws_sns_topic.sns.arn} --protocol email --notification-endpoint ${var.email}"
+  }
+  }

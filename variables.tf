@@ -17,3 +17,7 @@ variable "aws_account_id" {
 variable "bucket_prefix" {
   default = "s3acl"
 }
+
+variable "email" {
+  description = "please Provide Mail for SNS Topic"
+}
