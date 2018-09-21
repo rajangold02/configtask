@@ -26,9 +26,34 @@ resource "aws_iam_role" "config" {
 POLICY
 }
 
+resource "aws_iam_policy" "policy" {
+    name        = "test-policy"
+    description = "A test policy"
+    policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+				"sns:*",
+                "config:Get*",
+                "config:List*",
+                "config:Put*",
+                "s3:*",
+                "cloudwatch:DescribeAlarms",
+                "config:Describe*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy_attachment" "config" {
   role       = "${aws_iam_role.config.name}"
-  policy_arn = "arn:aws:iam::855172423373:policy/aws_config"
+  policy_arn = "${aws_iam_policy.policy.arn}"
 }
 
 # Configuration Record To Write In Bucket
@@ -111,7 +136,7 @@ resource "aws_config_configuration_recorder" "config" {
   recording_group {
     all_supported                 = false
     include_global_resource_types = false
-	resource_types = ["{AWS::S3::Bucket}", "{AWS::EC2::Instance}"]
+	resource_types = ["AWS::S3::Bucket"]
   }
 }
 
@@ -119,7 +144,7 @@ resource "aws_config_delivery_channel" "config" {
   name           = "config-example"
   s3_bucket_name = "${aws_s3_bucket.config.bucket}"
   s3_key_prefix  = "${var.bucket_prefix}"
-  sns_topic_arn  = "${var.sns_topic_arn}"
+  sns_topic_arn  = "${aws_sns_topic.sns.arn}"
 
   snapshot_delivery_properties {
     delivery_frequency = "Three_Hours"
@@ -156,4 +181,8 @@ resource "aws_config_config_rule" "s3_bucket_public_read_prohibited" {
   }
 
   depends_on = ["aws_config_configuration_recorder.config"]
+}
+
+resource "aws_sns_topic" "sns" {
+  name = "aws_config"
 }

@@ -17,7 +17,3 @@ variable "aws_account_id" {
 variable "bucket_prefix" {
   default = "s3acl"
 }
-
-variable "sns_topic_arn" {
-  default = "arn:aws:sns:us-east-1:855172423373:sns_config"
-}
