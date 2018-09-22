@@ -27,9 +27,10 @@ POLICY
 }
 
 resource "aws_iam_policy" "policy" {
-    name        = "test-policy"
-    description = "A test policy"
-    policy = <<EOF
+  name        = "test-policy"
+  description = "A test policy"
+
+  policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -136,7 +137,7 @@ resource "aws_config_configuration_recorder" "config" {
   recording_group {
     all_supported                 = false
     include_global_resource_types = false
-	resource_types = ["AWS::S3::Bucket"]
+    resource_types                = ["AWS::S3::Bucket"]
   }
 }
 
@@ -185,12 +186,8 @@ resource "aws_config_config_rule" "s3_bucket_public_read_prohibited" {
 
 resource "aws_sns_topic" "sns" {
   name = "aws_config"
-}
-
-resource "aws_sns_topic" "email" {
-  name = "email-notifications"
 
   provisioner "local-exec" {
     command = "aws sns subscribe --topic-arn ${aws_sns_topic.sns.arn} --protocol email --notification-endpoint ${var.email}"
   }
-  }
+}
